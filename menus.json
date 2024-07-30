@@ -28,7 +28,7 @@
         "required": {
             "name": "favourite_shared",
             "error": "Somthing is wrong",
-            "regex": "/^.*$/"
+            "regex": "^.*$"
         },
         "next": "display_shared",
         "footer": "*00* - Nothing. I want to quit"
