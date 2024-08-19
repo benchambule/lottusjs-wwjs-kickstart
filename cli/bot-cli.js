@@ -1,23 +1,22 @@
-const {bot} = require('../bot.js');
+import {bot} from "../bot.js";
 
 (async function () {
-    let session = {tags: {customer_name: "Ben Chambule"}};
-    session = await bot.process({msisdn: "123456789", prompt: "@lottus"}, session);
-    console.log(session.menu);
+    let current_message;
+    current_message = await bot.process({}, current_message);
+    console.log(current_message);
 
-    session = await bot.process({msisdn: "123456789", prompt: "1"}, session);
-    console.log(session.menu);
+    current_message = await bot.process({prompt: 1}, current_message);
+    console.log(current_message);
 
-    session = await bot.process({msisdn: "123456789", prompt: "0"}, session);
-    console.log(session.menu);
+    current_message = await bot.process({prompt: "0"}, current_message);
+    console.log(current_message);
 
-    session = await bot.process({msisdn: "123456789", prompt: "2"}, session);
-    console.log(session.menu);
+    current_message = await bot.process({prompt: "2"}, current_message);
+    console.log(current_message);
 
-    // bot.debug = true;
-    session = await bot.process({msisdn: "123456789", prompt: "1"}, session);
-    console.log(session.menu);
+    current_message = await bot.process({prompt: "0"}, current_message);
+    console.log(current_message);
 
-    session = await bot.process({msisdn: "123456789", prompt: "Olympus has fallen"}, session);
-    console.log(session.menu);
+    current_message = await bot.process({prompt: "1"}, current_message);
+    console.log(current_message);
 })();

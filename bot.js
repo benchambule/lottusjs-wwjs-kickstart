@@ -1,60 +1,38 @@
-const fs = require("fs");
-const {Bot} = require("lottus.js");
+import { Lottus } from "lottus.js";
+import { Message, Option, create_options_processor } from "./processors.js";
 
-require('dotenv').config();
+
+export {
+    bot
+}
+
+
+const main = new Message("main");
+main.addOption(new Option(1, "Home", "home"));
+main.addOption(new Option(2, "About", "about"));
+main.body = "You are on the main message";
+
+const home = new Message("home");
+home.addOption(new Option(0, "Main", "main"));
+home.body = "You selected home";
+
+const about = new Message("about");
+about.addOption(new Option(0, "Main", "main"));
+about.body = "You selected home";
+
 
 function create_bot(){
-    const menus = JSON.parse(fs.readFileSync("menus.json", "utf-8"));
+    let bot = new Lottus();
 
-    let _bot = new Bot(
-        {
-            name: process.env.LOTTUS_BOT_NAME, 
-            entrypoint: process.env.LOTTUS_BOT_ENTRYPOINT, 
-            keyword: process.env.LOTTUS_BOT_KEYWORD,
-            description: process.env.LOTTUS_BOT_DESCRIPTION
-        }
-    );
+    bot.info("main", main);
+    bot.form("main", create_options_processor(bot));
 
-    _bot.intercept('*', async function(req){
-        
-        if(req.prompt === process.env.LOTTUS_BOT_EXITWORD){
-            return {
-                menu: {
-                    "name": "quit",
-                    "title": process.env.LOTTUS_BOT_NAME,
-                    "message": "Thank you for using lottus bot",
-                    "final": true
-                }
-            }
-        }
-    });
+    bot.at("home", home, create_options_processor(bot));
 
-    _bot.addMenus(menus);
-
-    _bot.at('main', async function(req, tags){
-        tags["bot_name"] = process.env.LOTTUS_BOT_NAME;
-
-        return {
-            menu: {
-                "name": "main",
-                "title": "{{bot_name}}",
-                "message": "Hi *{{customer_name}}*, how can we help",
-                "options": [
-                    {"key": "1", "label": "More information", "menu": "more_info"},
-                    {"key": "2", "label": "Share something", "menu": "share"},
-                    {"key": "0", "label": "Quit", "menu": "quit"}
-                ],
-            },
-            
-            tags: tags
-        }
-    });
-
-    return _bot;
+    bot.at("about", about, create_options_processor(bot));
+    
+    return bot;
 }
 
-let bot = create_bot();
 
-module.exports = {
-    bot: bot
-}
+const bot = create_bot();
