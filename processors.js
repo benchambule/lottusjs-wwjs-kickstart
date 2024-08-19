@@ -62,7 +62,6 @@ Message.prototype.addInput = function addInput(input){
 
 function create_options_processor(bot){
     async function create_options_processor(req, res){
-        console.log(req);
         const options = req.form?.options;
         let errors = [];
 
