@@ -19,4 +19,7 @@ import {bot} from "../bot.js";
 
     current_message = await bot.process({prompt: "1"}, current_message);
     console.log(current_message);
+
+    current_message = await bot.process({prompt: "1"}, current_message);
+    console.log(current_message);
 })();

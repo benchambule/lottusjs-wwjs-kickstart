@@ -21,6 +21,11 @@ class Option {
 }
 
 
+Message.prototype.header = "";
+Message.prototype.body = "";
+Message.prototype.footer = "Powered by Lottus";
+
+
 Message.prototype.addOption = function addOption(option){
     if(!this.form){
         this.form = {options: new Map()};
@@ -63,7 +68,6 @@ Message.prototype.addInput = function addInput(input){
 function create_options_processor(bot){
     async function create_options_processor(req, res){
         const options = req.form?.options;
-        let errors = [];
 
         if(options){
             const option = options.get(req.prompt.toString());
@@ -78,11 +82,11 @@ function create_options_processor(bot){
 
                 return await bot.redirect(next, req);
             } else {
-                errors.push("Invalid option");
+                res.error = "You selected an invalid option";
             }
-        } 
-        
-        throw new Error("form has no options to process");
+        }
+
+        return res;
     }
 
     return create_options_processor;
@@ -99,9 +103,11 @@ function create_input_processor(bot){
             let next = req.form?.next;
 
             return await bot.redirect(next, req);
+        } else {
+            res.error = "You selected an invalid option";
         }
 
-        throw new Error("form has no input to process");
+        return res;
     }
 
     return input_processor;
@@ -112,7 +118,6 @@ function create_form_processor(bot){
     async function form_processor(req, res){
         const options = req.form?.options;
         const input = req.form?.input;
-        let errors = [];
 
         if(options){
             const option = options.get(req.prompt);
@@ -127,7 +132,7 @@ function create_form_processor(bot){
 
                 return await bot.redirect(next, req);
             } else {
-                errors.push("Invalid option");
+                res.error = "You selected an invalid option";
             }
         }
 
@@ -139,7 +144,11 @@ function create_form_processor(bot){
             return await bot.redirect(next, req);
         }
 
-        throw new Error("form has no input nor options to process");
+        if(!res.error){
+            res.error = "The form has no input nor options";
+        }
+
+        return res;
     }
 
     return form_processor;

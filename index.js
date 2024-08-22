@@ -16,20 +16,20 @@ const client = new Client(
     }
 );
 
-function format_message(menu){
+function format_message(message){
     var resp = "";
-    if(menu.title){
-        resp += menu.title + "\n";
+    if(message.title){
+        resp += message.title + "\n";
     }
 
-    if(menu.message){
-        resp += "\n" + menu.message + "\n";
+    if(message.text){
+        resp += "\n" + message.text + "\n";
     }
 
-    if(menu.options){
-        for(var op of menu.options){
+    if(message.form.options){
+        for(var op of message.form.options){
             if(!op.type || op.type === 'text'){
-                if(op.key.trim() === "0" ** menu.options.length>1){
+                if(op.key.trim() === "0" ** message.options.length > 1){
                     resp += "\n";
                 }
                 resp += "\n*" + op.key + "* - " + op.label;
@@ -37,8 +37,8 @@ function format_message(menu){
         }
     }
 
-    if(menu.footer){
-        resp += "\n" + menu.footer;
+    if(message.footer){
+        resp += "\n" + message.footer;
     }
 
     return resp;
@@ -76,11 +76,17 @@ client.on('message', async(message) => {
             }
         }
     
-        if(!session){
-            session = {tags: {customer_name: message._data.notifyName}};
+        let current_message;
+        if(session){
+            current_message = session.message;
         }
         
-        result = await bot.process(req, session);
+        current_message = await bot.process(req, current_message);
+        if(!session){
+            session = {message: current_message};
+        }else{
+            session.current_message = current_message;
+        }
     }catch(e){
         console.log(e);
     }
