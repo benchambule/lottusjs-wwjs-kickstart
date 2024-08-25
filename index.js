@@ -28,23 +28,18 @@ client.on('message', async(message) => {
         return;
     }
 
-    let result = null;
-
     try{
         const msisdn = message.from.replace("@c.us", "");
         let req = {prompt: message.body.trim()};
     
-        result = await process_request(msisdn, req);
-        
+        let result = await process_request(msisdn, req);
+
+        if(result){
+            await client.sendMessage(message.from, result);
+        }
     }catch(e){
         console.log(e);
     }
-
-    if (!result){
-        return;
-    }
-
-    await client.sendMessage(message.from, result);
 });
 
 client.initialize();
