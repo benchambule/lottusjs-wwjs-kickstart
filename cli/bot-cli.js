@@ -1,25 +1,19 @@
-import {bot} from "../bot.js";
+import { process_request } from "../bot.js";
 
 (async function () {
-    let current_message;
-    current_message = await bot.process({}, current_message);
-    console.log(current_message);
+    let input = ["", "1", "0", "2"];
 
-    current_message = await bot.process({prompt: 1}, current_message);
-    console.log(current_message);
+    for(const i of input){
+        const identifier = "841234567";
 
-    current_message = await bot.process({prompt: "0"}, current_message);
-    console.log(current_message);
+        console.log(await process_request(identifier, {prompt: input}));
+    }
 
-    current_message = await bot.process({prompt: "2"}, current_message);
-    console.log(current_message);
+    input = ["", "2", "0", "1", "1", "1", "0"];
 
-    current_message = await bot.process({prompt: "0"}, current_message);
-    console.log(current_message);
-
-    current_message = await bot.process({prompt: "1"}, current_message);
-    console.log(current_message);
-
-    current_message = await bot.process({prompt: "1"}, current_message);
-    console.log(current_message);
+    for(const i of input){
+        const identifier = "841234568";
+        
+        console.log(await process_request(identifier, {prompt: input}));
+    }
 })();
