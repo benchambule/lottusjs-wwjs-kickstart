@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "better-sqlite3": "^11.2.1",
     "lottus.js": "github:benchambule/lottus.js#main"
   }
 }

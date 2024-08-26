@@ -1,4 +1,5 @@
-import { lottus, form_processor, InMemorySessionManager, process_w_session, format_message } from "lottus.js";
+import { lottus, form_processor, process_w_session, format_message } from "lottus.js";
+import { SqliteSessionManager } from "./sqlite.js"
 
 
 export {
@@ -9,7 +10,7 @@ export {
 async function process_request(msisdn, request){
     try{
         const session = await process_w_session(bot, session_manager, msisdn, request);
-        
+
         return format_message(session.message);
     }catch(e){
         console.log(e);
@@ -18,7 +19,7 @@ async function process_request(msisdn, request){
     return null;
 }
 
-const session_manager = new InMemorySessionManager();
+const session_manager = new SqliteSessionManager("lottus.db");
 
 function get_main(req, res){
     res.title = "Main";
